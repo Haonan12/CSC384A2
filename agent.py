@@ -152,7 +152,7 @@ def alphabeta_min_node(board, color, alpha, beta, limit, caching = 0, ordering =
     #     moves = node_ordering_sort(board, 3-color)
     moves = get_possible_moves(board, 3 - color)
     if not moves:
-        value = compute_heuristic(board, color)
+        value = compute_utility(board, color)
         if caching:
             cache_alphabeta[(board, 3 - color)] = min_move, value
         return min_move, value
@@ -161,11 +161,11 @@ def alphabeta_min_node(board, color, alpha, beta, limit, caching = 0, ordering =
     value_list = []
     if ordering:
         moves = sorted(moves,
-                       key=lambda move: compute_heuristic(play_move(board, 3 - color, move[0], move[1]), 3 - color),
+                       key=lambda move: compute_utility(play_move(board, 3 - color, move[0], move[1]), 3 - color),
                        reverse=True)
     else:
         test = sorted(moves,
-                        key=lambda move: compute_heuristic(play_move(board, 3 - color, move[0], move[1]), 3 - color),
+                        key=lambda move: compute_utility(play_move(board, 3 - color, move[0], move[1]), 3 - color),
                         reverse=True)
     # print("min")
     # print(len(moves))
@@ -177,7 +177,7 @@ def alphabeta_min_node(board, color, alpha, beta, limit, caching = 0, ordering =
         if limit > 1:
             (next_move, new_value) = alphabeta_max_node(new_board, color, alpha, beta, limit - 1, caching, ordering)
         else:
-            new_value = compute_heuristic(new_board, color)
+            new_value = compute_utility(new_board, color)
         if min_value > new_value:
             min_value, min_move = new_value, move
 
@@ -200,7 +200,7 @@ def alphabeta_max_node(board, color, alpha, beta, limit, caching = 0, ordering =
 
     moves = get_possible_moves(board, color)
     if not moves:
-        value = compute_heuristic(board, color)
+        value = compute_utility(board, color)
         if caching:
             cache_alphabeta[(board, color)] = max_move, value
             return cache_alphabeta[(board, color)]
@@ -209,10 +209,10 @@ def alphabeta_max_node(board, color, alpha, beta, limit, caching = 0, ordering =
     max_value = float("-inf")
     if ordering:
 
-        moves = sorted(moves, key=lambda move: compute_heuristic(play_move(board, color, move[0], move[1]), color),
+        moves = sorted(moves, key=lambda move: compute_utility(play_move(board, color, move[0], move[1]), color),
                        reverse=True)
     else:
-        test = sorted(moves, key=lambda move: compute_heuristic(play_move(board, color, move[0], move[1]), color),
+        test = sorted(moves, key=lambda move: compute_utility(play_move(board, color, move[0], move[1]), color),
                         reverse=True)
 
     # print("max")
@@ -222,7 +222,7 @@ def alphabeta_max_node(board, color, alpha, beta, limit, caching = 0, ordering =
         if limit > 1:
             (next_move, new_value) = alphabeta_min_node(new_board, color, alpha, beta, limit - 1, caching, ordering)
         else:
-            new_value = compute_heuristic(new_board, color)
+            new_value = compute_utility(new_board, color)
         if max_value < new_value:
             max_value, max_move = new_value, move
 

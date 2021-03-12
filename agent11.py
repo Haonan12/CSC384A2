@@ -76,9 +76,9 @@ def minimax_min_node(board, color, limit, caching = 0):
     moves = get_possible_moves(board, 3-color)
     if not moves:
         if caching:
-            cache_minimax[(board, 3 - color)] = min_move, compute_utility(board, color)
+            cache_minimax[(board, 3 - color)] = min_move, compute_heuristic(board, color)
             return cache_minimax[(board, 3 - color)]
-        return min_move, compute_utility(board, color)
+        return min_move, compute_heuristic(board, color)
 
     min_value = float("inf")
     for move in moves:
@@ -86,7 +86,7 @@ def minimax_min_node(board, color, limit, caching = 0):
         if limit > 1:
             (next_move, new_value) = minimax_max_node(new_board, color, limit - 1, caching)
         else:
-            new_value = compute_utility(new_board, color)
+            new_value = compute_heuristic(new_board, color)
         if min_value > new_value:
             min_value, min_move = new_value, move
 
@@ -105,9 +105,9 @@ def minimax_max_node(board, color, limit, caching = 0): #returns highest possibl
     moves = get_possible_moves(board, color)
     if not moves:
         if caching:
-            cache_minimax[(board, 3 - color)] = max_move, compute_utility(board, color)
+            cache_minimax[(board, 3 - color)] = max_move, compute_heuristic(board, color)
             return cache_minimax[(board, 3 - color)]
-        return max_move, compute_utility(board, color)
+        return max_move, compute_heuristic(board, color)
 
     max_value = float("-inf")
     for move in moves:
@@ -115,7 +115,7 @@ def minimax_max_node(board, color, limit, caching = 0): #returns highest possibl
         if limit > 1:
             (next_move, new_value) = minimax_min_node(new_board, color, limit - 1, caching)
         else:
-            new_value = compute_utility(new_board, color)
+            new_value = compute_heuristic(new_board, color)
         if max_value < new_value:
             max_value, max_move = new_value, move
 
@@ -159,12 +159,12 @@ def alphabeta_min_node(board, color, alpha, beta, limit, caching = 0, ordering =
 
     min_value = float("inf")
     value_list = []
-    if ordering:
-        moves = sorted(moves, key = lambda move: compute_heuristic(play_move(board, 3 - color, move[0], move[1]), 3 - color), reverse = True)
-    else:
-        nmoves = sorted(moves,
-                       key=lambda move: compute_heuristic(play_move(board, 3 - color, move[0], move[1]), 3 - color),
-                       reverse=True)
+    # if ordering:
+    #     moves = sorted(moves, key = lambda move: compute_utility(play_move(board, 3 - color, move[0], move[1]), 3 - color), reverse = True)
+    # else:
+    #     nmoves = sorted(moves,
+    #                    key=lambda move: compute_utility(play_move(board, 3 - color, move[0], move[1]), 3 - color),
+    #                    reverse=True)
     # print("min")
     # print(len(moves))
     for move in moves:
@@ -206,12 +206,12 @@ def alphabeta_max_node(board, color, alpha, beta, limit, caching = 0, ordering =
         return max_move, value
 
     max_value = float("-inf")
-    if ordering:
-
-        moves = sorted(moves, key = lambda move: compute_heuristic(play_move(board, color, move[0], move[1]), color), reverse = True)
-    else:
-        nmoves = sorted(moves, key=lambda move: compute_heuristic(play_move(board, color, move[0], move[1]), color),
-                       reverse=True)
+    # if ordering:
+    #
+    #     moves = sorted(moves, key = lambda move: compute_utility(play_move(board, color, move[0], move[1]), color), reverse = True)
+    # else:
+    #     nmoves = sorted(moves, key=lambda move: compute_utility(play_move(board, color, move[0], move[1]), color),
+    #                    reverse=True)
 
     # print("max")
     # print(len(moves))
